@@ -30,20 +30,9 @@ func room_overlap(map):
     # Parameters:
     var cell_overlap = -1
     # Create int map.
-    var matrix=[]
-    for x in range(map.SIZE.x):
-        matrix.append([])
-        matrix[x]=[]
-        for y in range(map.SIZE.y):
-            matrix[x].append([])
-            matrix[x][y]=0
+    var matrix = utils.create_empty_matrix(map)
     # Add cell for each room ocurrence.
-    for room in map.room_list:
-        var room_width = Vector2(room.init_pos.x, room.init_pos.x + room.size.x)
-        var room_height = Vector2(room.init_pos.y, room.init_pos.y + room.size.y)
-        for x in range(room_width.x, room_width.y):
-            for y in range(room_height.x, room_height.y):
-                matrix[y][x] += 1
+    matrix = utils.create_rooms_matrix(map, matrix, true)
     # Remove none and single ocurrences.
     for x in range(map.SIZE.x):
         for y in range(map.SIZE.y):
@@ -64,34 +53,9 @@ func overlapping_corridors(map):
     # Parameters:
     var cell_overlap = -1
     # Create int map.
-    var matrix=[]
-    for x in range(map.SIZE.x):
-        matrix.append([])
-        matrix[x]=[]
-        for y in range(map.SIZE.y):
-            matrix[x].append([])
-            matrix[x][y]=0
-    # Add cell for each room ocurrence.
-    var x
-    var y
-    var mi
-    var ma
-    for corridor in map.corridor_list:
-        for k in range(corridor.points.size()-1):
-            var cur_point = corridor.points[k]
-            var next_point = corridor.points[k+1]
-            if cur_point.x == next_point.x:
-                x = cur_point.x
-                mi = min(cur_point.y, next_point.y)
-                ma = max(cur_point.y, next_point.y)+1
-                for y in range(mi, ma):
-                    matrix[y][x] += 1
-            elif cur_point.y == next_point.y:
-                y = cur_point.y
-                mi = min(cur_point.x, next_point.x)
-                ma = max(cur_point.x, next_point.x)+1
-                for x in range(mi, ma):
-                    matrix[y][x] += 1
+    var matrix = utils.create_empty_matrix(map)
+    # Add cell for each corridor ocurrence.
+    matrix = utils.create_corridors_matrix(map, matrix, true)
     # Remove none and single ocurrences.
     for x in range(map.SIZE.x):
         for y in range(map.SIZE.y):
@@ -109,64 +73,24 @@ func corridor_endings(map):
     # Parameters
     var corridor_end_penalty = 5
     # Create int map.
-    var matrix=[]
-    for x in range(map.SIZE.x):
-        matrix.append([])
-        matrix[x]=[]
-        for y in range(map.SIZE.y):
-            matrix[x].append([])
-            matrix[x][y]=0
-    # Create map of rooms and corridors.
-    for room in map.room_list:
-        var room_width = Vector2(room.init_pos.x, room.init_pos.x + room.size.x)
-        var room_height = Vector2(room.init_pos.y, room.init_pos.y + room.size.y)
-        for x in range(room_width.x, room_width.y):
-            for y in range(room_height.x, room_height.y):
-                matrix[y][x] = 1
+    var matrix = utils.create_empty_matrix(map)
+    # Create map of rooms.
+    matrix = utils.create_rooms_matrix(map, matrix, false)
     # foreach corridor, get both ends and check if it and its adjacencies are inside a room.
     var penalty = 0
     for corridor in map.corridor_list:
         penalty += check_corridor_end(matrix, corridor_end_penalty, corridor.points[0])
         penalty += check_corridor_end(matrix, corridor_end_penalty, corridor.points[len(corridor.points)-1])
-    print(-penalty)
     return -penalty
 
 func map_reachability(map):
     # Parameters:
     var penalty_per_cell = 1
     # Create int map.
-    var matrix=[]
-    for x in range(map.SIZE.x):
-        matrix.append([])
-        matrix[x]=[]
-        for y in range(map.SIZE.y):
-            matrix[x].append([])
-            matrix[x][y]=0
+    var matrix = utils.create_empty_matrix(map)
     # Create map of rooms and corridors.
-    for room in map.room_list:
-        var room_width = Vector2(room.init_pos.x, room.init_pos.x + room.size.x)
-        var room_height = Vector2(room.init_pos.y, room.init_pos.y + room.size.y)
-        for x in range(room_width.x, room_width.y):
-            for y in range(room_height.x, room_height.y):
-                matrix[y][x] = 1
-                matrix[y][x] = 1
-    for corridor in map.corridor_list:
-        for k in range(corridor.points.size()-1):
-            var cur_point = corridor.points[k]
-            var next_point = corridor.points[k+1]
-            if cur_point.x == next_point.x:
-                var x = cur_point.x
-                var mi = min(cur_point.y, next_point.y)
-                var ma = max(cur_point.y, next_point.y)+1
-                for y in range(mi, ma):
-                    matrix[y][x] = 1
-            elif cur_point.y == next_point.y:
-                var y = cur_point.y
-                var mi = min(cur_point.x, next_point.x)
-                var ma = max(cur_point.x, next_point.x)+1
-                for x in range(mi, ma):
-                    matrix[y][x] = 1
-            matrix[next_point.y][next_point.x] = 1
+    matrix = utils.create_rooms_matrix(map, matrix, false)
+    matrix = utils.create_corridors_matrix(map, matrix, false)
     # Get number of spaces and detect first empty space and add to queue. 
     var num_spaces = 0
     var first_space = Vector2(-1,0)

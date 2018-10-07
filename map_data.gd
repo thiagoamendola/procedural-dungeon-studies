@@ -68,6 +68,7 @@ func create_random_corridor():
 			points.append(point)
 	create_corridor(points)
 
+# Others
 
 func print_map_data():
 	for corridor in corridor_list:
