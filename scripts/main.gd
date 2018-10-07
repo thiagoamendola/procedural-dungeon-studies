@@ -1,7 +1,7 @@
 extends Node2D
 
-const MapData = preload("res://map_data.gd")
-const MapEvaluator = preload("res://map_evaluator.gd")
+const MapData = preload("res://scripts/map_data.gd")
+const MapEvaluator = preload("res://scripts/map_evaluator.gd")
 
 onready var map_spawner = get_node("MapSpawner")
 
