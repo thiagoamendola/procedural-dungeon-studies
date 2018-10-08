@@ -2,7 +2,7 @@ extends Node
 
 # Imports
 
-const utils = preload("res://scripts/utils.gd")
+const utils = preload("utils.gd")
 
 # Constants
 
