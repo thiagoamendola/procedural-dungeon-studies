@@ -76,8 +76,6 @@ static func create_corridors_matrix(map, matrix, additive=false):
                     else:
                         matrix[x][y] = 1
 #            matrix[next_point.y][next_point.x] = 1
-    map.print_map_data()
-
     for x in range(map.SIZE.x):
         var text = ""
         for y in range(map.SIZE.y):

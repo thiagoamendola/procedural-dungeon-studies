@@ -2,23 +2,32 @@ extends Node2D
 
 const MapData = preload("map_data.gd")
 const MapEvaluator = preload("map_evaluator.gd")
+const EvolutionManager = preload("evolution_manager.gd")
 
 onready var map_viewer = get_node("MapViewer")
 
 func _ready():
 	randomize()
 	map_viewer.create_map_view(3)
+	var evolution_manager = EvolutionManager.new()
 	var map_data = MapData.new()
 	map_data.create_random_room()
 	map_data.create_random_room()
 	map_data.create_random_corridor()
 	map_data.create_random_corridor()
 	map_viewer.build_map(map_data, 0)
-	map_viewer.build_map(map_data, 1)
-	map_viewer.build_map(map_data, 2)
-
-
-
+	var map_data2 = MapData.new()
+	map_data2.create_random_room()
+	map_data2.create_random_room()
+	map_data2.create_random_room()
+	map_data2.create_random_room()
+	map_data2.create_random_corridor()
+	map_data2.create_random_corridor()
+	map_data2.create_random_corridor()
+	map_data2.create_random_corridor()
+	map_viewer.build_map(map_data2, 1)
+	var map_data3 = evolution_manager.maps_crossover(map_data,map_data2)
+	map_viewer.build_map(map_data3, 2)
 
 
 	
