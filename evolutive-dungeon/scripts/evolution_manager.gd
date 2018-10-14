@@ -4,6 +4,8 @@ const MapData = preload("map_data.gd")
 const MapEvaluator = preload("map_evaluator.gd")
 
 const GENERATION_SIZE = 10
+const ROOMS_MUTATION_CHANCE = 0.5
+const CORRIDORS_MUTATION_CHANCE = 0.5
 
 var generation
 var map_array
@@ -27,13 +29,20 @@ func update_generation(num_survivors, num_new_randoms):
     for i in range(GENERATION_SIZE-num_survivors):
         map_array.pop_back()
     # recreate destroyed maps based on survivors
+    var parent = 0
+    var map_data
     for i in range(num_survivors-num_new_randoms):
         # create crossover child
-        print("crossover")
+        map_data = maps_crossover(map_array[parent], map_array[parent+1])
+        map_array.append(map_data)
+        parent+=2
     for i in range(num_new_randoms):
         # create random child
-        print("random")
+        map_data = MapData.new()
+        map_data.create_random_map()
+        map_array.append(map_data)
 
+# Crossover
 
 func maps_crossover(map1, map2):
     var map_child = MapData.new()
@@ -41,7 +50,6 @@ func maps_crossover(map1, map2):
     crossover_corridors(map_child, map1, map2)
     #mutate_map(map_child, map1, map2)
     return map_child
-
 
 func crossover_rooms(map_child, map1, map2):
     # Get random number between both map sizes.
@@ -59,8 +67,7 @@ func crossover_rooms(map_child, map1, map2):
         var room = maps_rooms[index]
         maps_rooms.remove(index)
         map_child.room_list.append(room)
-        
-    
+
 func crossover_corridors(map_child, map1, map2):
     # Get random number between both map sizes.
     var num_corridors = rand_range(min(map1.corridor_list.size(),map2.corridor_list.size()),
@@ -78,6 +85,29 @@ func crossover_corridors(map_child, map1, map2):
         maps_corridors.remove(index)
         map_child.corridor_list.append(corridor)
 
+# Mutation
+
+func mutate_map(map):
+    mutate_rooms(map)
+    mutate_corridors(map)
+
+func mutate_rooms(map):
+    if rand_range(0.0, 1.0) >= ROOMS_MUTATION_CHANCE:
+        var prob = rand_range(0.0, 1.0)
+        if prob > 0.5:
+            map.create_random_room()
+        else:
+            map.room_list.remove(rand_range(0,len(map.room_list)))
+
+func mutate_corridors(map):
+    if rand_range(0.0, 1.0) >= CORRIDORS_MUTATION_CHANCE:
+        var prob = rand_range(0.0, 1.0)
+        if prob > 0.5:
+            map.create_random_corridor()
+        else:
+            map.corridor_list.remove(rand_range(0,len(map.corridor_list)))
+
+# Others
 
 static func sort_maps(a, b):
     var map_evaluator = MapEvaluator.new()
