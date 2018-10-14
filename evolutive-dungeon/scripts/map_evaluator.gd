@@ -79,8 +79,8 @@ func corridor_endings(map):
     # foreach corridor, get both ends and check if it and its adjacencies are inside a room.
     var penalty = 0
     for corridor in map.corridor_list:
-        penalty += check_corridor_end(matrix, corridor_end_penalty, corridor.points[0])
-        penalty += check_corridor_end(matrix, corridor_end_penalty, corridor.points[len(corridor.points)-1])
+        penalty += check_corridor_end(matrix, map.SIZE, corridor_end_penalty, corridor.points[0])
+        penalty += check_corridor_end(matrix, map.SIZE, corridor_end_penalty, corridor.points[len(corridor.points)-1])
     return -penalty
 
 func map_reachability(map):
@@ -125,19 +125,19 @@ func check_adj_reachable(matrix, bounds, queue, cell):
         queue.push_back(cell)
         matrix[cell.x][cell.y] = 2
 
-func check_corridor_end(matrix, penalty, cell):
+func check_corridor_end(matrix, bounds, penalty, cell):
     var end_connected = false
-    end_connected = end_connected || check_adj_corridor(matrix, Vector2(cell.x, cell.y))
-    end_connected = end_connected || check_adj_corridor(matrix, Vector2(cell.x, cell.y-1))
-    end_connected = end_connected || check_adj_corridor(matrix, Vector2(cell.x, cell.y+1))
-    end_connected = end_connected || check_adj_corridor(matrix, Vector2(cell.x-1, cell.y))
-    end_connected = end_connected || check_adj_corridor(matrix, Vector2(cell.x+1, cell.y))
+    end_connected = end_connected || check_adj_corridor(matrix, bounds, Vector2(cell.x, cell.y))
+    end_connected = end_connected || check_adj_corridor(matrix, bounds, Vector2(cell.x, cell.y-1))
+    end_connected = end_connected || check_adj_corridor(matrix, bounds, Vector2(cell.x, cell.y+1))
+    end_connected = end_connected || check_adj_corridor(matrix, bounds, Vector2(cell.x-1, cell.y))
+    end_connected = end_connected || check_adj_corridor(matrix, bounds, Vector2(cell.x+1, cell.y))
     if not end_connected:
         return penalty
     return 0
 
-func check_adj_corridor(matrix, cell):
-    if matrix[cell.y][cell.x] == 1:
+func check_adj_corridor(matrix, bounds, cell):
+    if utils.between(0, cell.x, bounds.x-1) && utils.between(0, cell.y, bounds.y-1) && matrix[cell.y][cell.x] == 1:
         return true
     return false
 
