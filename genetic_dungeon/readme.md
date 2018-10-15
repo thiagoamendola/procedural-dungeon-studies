@@ -13,4 +13,4 @@ Create a genetic algorithm system capable of mutating and breeding procedurally 
 - [x] Create random map creation method
 - [x] Create map breeding method
 - [x] Create map mutation method
-- [ ] Implement multiple maps (and their fitness) visualization
+- [x] Implement multiple maps (and their fitness) visualization
