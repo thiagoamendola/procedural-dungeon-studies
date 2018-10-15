@@ -16,11 +16,6 @@ func _ready():
 	evolution_manager = EvolutionManager.new()
 	evolution_manager.initiate_population()
 	render_population()
-	# Initiate UI
-	#var next_gen_btn = get_node("NextGenBtn")
-	#var ui_height = map_viewer.TILE_SIZE.y * (MapData.SIZE.y+2) + 0
-	#ui_height *= map_viewer.scale.y
-	#next_gen_btn.rect_position.y = ui_height
 
 func render_population():
 	for i in range(EvolutionManager.GENERATION_SIZE):
@@ -30,10 +25,17 @@ func go_to_next_gen():
 	evolution_manager.update_generation()
 	render_population()
 
+func reset_population():
+	evolution_manager.initiate_population()
+	render_population()
+
 # Events
 
 func _on_NextGenBtn_pressed():
 	go_to_next_gen()
+
+func _on_ResetBtn_pressed():
+	reset_population()
 
 # Legacy
 	
@@ -77,4 +79,3 @@ func create_defined_map():
 	map_data.create_room(Vector2(1,1), Vector2(3,4))
 	map_data.create_room(Vector2(5,5), Vector2(4,2))
 	map_data.create_corridor([Vector2(4,2),Vector2(7,2),Vector2(7,4)])
-

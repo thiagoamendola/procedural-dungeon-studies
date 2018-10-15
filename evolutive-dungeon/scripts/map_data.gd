@@ -6,7 +6,7 @@ const utils = preload("utils.gd")
 
 # Constants
 
-const SIZE = Vector2(11,11)
+const SIZE = Vector2(10,10)
 const ROOM_SIZE_MEAN = 3
 const ROOM_SIZE_DEVIATION = 1
 
