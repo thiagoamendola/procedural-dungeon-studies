@@ -17,10 +17,10 @@ func _ready():
 	evolution_manager.initiate_population()
 	render_population()
 	# Initiate UI
-	var next_gen_btn = get_node("NextGenBtn")
-	var ui_height = map_viewer.TILE_SIZE.y * (MapData.SIZE.y+2) + 0
-	ui_height *= map_viewer.scale.y
-	next_gen_btn.rect_position.y = ui_height
+	#var next_gen_btn = get_node("NextGenBtn")
+	#var ui_height = map_viewer.TILE_SIZE.y * (MapData.SIZE.y+2) + 0
+	#ui_height *= map_viewer.scale.y
+	#next_gen_btn.rect_position.y = ui_height
 
 func render_population():
 	for i in range(EvolutionManager.GENERATION_SIZE):

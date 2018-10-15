@@ -1,5 +1,14 @@
 extends Node
 
+# Fitness Parameters
+
+var POINTS_PER_ROOM = 7
+var POINTS_PER_CORRIDOR = 2
+var ROOM_OVERLAP_PENALTY = -2
+var CORRIDOR_OVERLAP_PENALTY = -1
+var CORRIDOR_END_PENALTY = -10
+var UNREACHABLE_CELL_PENALTY = -1
+
 # Imports
 const utils = preload("utils.gd")
 
@@ -16,19 +25,16 @@ func get_fitness(map):
 
 # Evaluation steps.
 
+# Sums points for each component
 func elements_sum(map):
-    # Parameters:
-    var room_point = 10
-    var corridor_point = 4
     # Calculate score of map elements.
     var sum = 0
-    sum += len(map.room_list) * room_point 
-    sum += len(map.corridor_list) * corridor_point 
+    sum += len(map.room_list) * POINTS_PER_ROOM 
+    sum += len(map.corridor_list) * POINTS_PER_CORRIDOR 
+    #print("elements_sum: "+str(sum))
     return sum
 
 func room_overlap(map):
-    # Parameters:
-    var cell_overlap = -1
     # Create int map.
     var matrix = utils.create_empty_matrix(map)
     # Add cell for each room ocurrence.
@@ -43,15 +49,14 @@ func room_overlap(map):
     var sum = 0
     for x in range(map.SIZE.x):
         for y in range(map.SIZE.y):
-            sum += cell_overlap * matrix[x][y]
+            sum += ROOM_OVERLAP_PENALTY * matrix[x][y]
+    #print("room_overlap: "+str(sum))
     return sum
 
 func adjacent_rooms(map):
     return 0
 
 func overlapping_corridors(map):
-    # Parameters:
-    var cell_overlap = -1
     # Create int map.
     var matrix = utils.create_empty_matrix(map)
     # Add cell for each corridor ocurrence.
@@ -66,12 +71,11 @@ func overlapping_corridors(map):
     var sum = 0
     for x in range(map.SIZE.x):
         for y in range(map.SIZE.y):
-            sum += cell_overlap * matrix[x][y]
+            sum += CORRIDOR_OVERLAP_PENALTY * matrix[x][y]
+    #print("overlapping_corridors: "+str(sum))
     return sum
 
 func corridor_endings(map):
-    # Parameters
-    var corridor_end_penalty = 5
     # Create int map.
     var matrix = utils.create_empty_matrix(map)
     # Create map of rooms.
@@ -79,13 +83,12 @@ func corridor_endings(map):
     # foreach corridor, get both ends and check if it and its adjacencies are inside a room.
     var penalty = 0
     for corridor in map.corridor_list:
-        penalty += check_corridor_end(matrix, map.SIZE, corridor_end_penalty, corridor.points[0])
-        penalty += check_corridor_end(matrix, map.SIZE, corridor_end_penalty, corridor.points[len(corridor.points)-1])
-    return -penalty
+        penalty += check_corridor_end(matrix, map.SIZE, CORRIDOR_END_PENALTY, corridor.points[0])
+        penalty += check_corridor_end(matrix, map.SIZE, CORRIDOR_END_PENALTY, corridor.points[len(corridor.points)-1])
+    #print("corridor_endings: "+str(penalty))
+    return penalty
 
 func map_reachability(map):
-    # Parameters:
-    var penalty_per_cell = 1
     # Create int map.
     var matrix = utils.create_empty_matrix(map)
     # Create map of rooms and corridors.
@@ -114,9 +117,11 @@ func map_reachability(map):
         matrix[cell.x][cell.y] = 2
         num_reachable += 1
     # Compare the number of painted cells and spaces in the map.
+    var penalty = 0
     if num_reachable < num_spaces:
-        return -map.SIZE.x*map.SIZE.y*penalty_per_cell
-    return 0
+        penalty = map.SIZE.x*map.SIZE.y*UNREACHABLE_CELL_PENALTY
+    #print("map_reachability: "+str(penalty))
+    return penalty
     
 # Assisting methods
 

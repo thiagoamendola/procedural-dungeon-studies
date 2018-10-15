@@ -6,9 +6,9 @@ const utils = preload("utils.gd")
 
 # Constants
 
-const SIZE = Vector2(10,10)
-const MEAN = 3
-const DEVIATION = 1
+const SIZE = Vector2(11,11)
+const ROOM_SIZE_MEAN = 3
+const ROOM_SIZE_DEVIATION = 1
 
 # Structs
 
@@ -43,7 +43,7 @@ func create_corridor(points):
 # Random creation
 
 func create_random_map():
-	var num_rooms = rand_range(2, 8)
+	var num_rooms = rand_range(2, int(((SIZE.x+SIZE.y)/2)*0.75))
 	var num_corridors = rand_range(num_rooms-1, 2*num_rooms)
 	for i in range(num_rooms):
 	    create_random_room()
@@ -51,7 +51,7 @@ func create_random_map():
 		create_random_corridor()
 
 func create_random_room():
-    var room_size = Vector2(utils.normal_limits(MEAN, DEVIATION, 2, SIZE.x), utils.normal_limits(MEAN, DEVIATION, 2, SIZE.y))
+    var room_size = Vector2(utils.normal_limits(ROOM_SIZE_MEAN, ROOM_SIZE_DEVIATION, 2, SIZE.x), utils.normal_limits(ROOM_SIZE_MEAN, ROOM_SIZE_DEVIATION, 2, SIZE.y))
     var room_pos = Vector2(rand_range(0 , SIZE.x-room_size.x), rand_range(0, SIZE.y-room_size.y))
     create_room(room_pos, room_size)
 

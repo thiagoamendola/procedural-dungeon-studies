@@ -1,21 +1,21 @@
 extends Node
 
+# Evolutive Parameters
 
 const GENERATION_SIZE = 10
-const GENERATION_SURVIVORS = 5
-const RANDOM_PER_GENERATION = 2
+const GENERATION_SURVIVORS = 4
+const RANDOM_PER_GENERATION = 4
 
 const ROOMS_MUTATION_CHANCE = 0.5
 const CORRIDORS_MUTATION_CHANCE = 0.5
+
+# Others
 
 const MapData = preload("map_data.gd")
 const MapEvaluator = preload("map_evaluator.gd")
 
 var generation
 var map_array
-
-#onready var map_evaluator = MapEvaluator.new()
-
 
 func initiate_population():
     generation = 1
@@ -33,16 +33,15 @@ func update_generation():
     # sort maps by fitness
     map_array.sort_custom(self, "sort_maps")
     # delete worst maps
-    for i in range(GENERATION_SIZE-GENERATION_SURVIVORS):
+    var new_maps_count = GENERATION_SIZE-GENERATION_SURVIVORS
+    for i in range(new_maps_count):
         map_array.pop_back()
     # recreate destroyed maps based on survivors
-    var parent = 0
     var map_data
-    for i in range(GENERATION_SURVIVORS-RANDOM_PER_GENERATION):
+    for i in range(new_maps_count-RANDOM_PER_GENERATION):
         # create crossover child
-        map_data = maps_crossover(map_array[parent], map_array[parent+1])
+        map_data = maps_crossover(map_array[rand_range(0,map_array.size())], map_array[rand_range(0,map_array.size())])
         map_array.append(map_data)
-        parent+=2
     for i in range(RANDOM_PER_GENERATION):
         # create random child
         map_data = MapData.new()
