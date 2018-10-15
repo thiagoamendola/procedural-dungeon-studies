@@ -2,13 +2,13 @@ extends Node
 
 # Imports
 
-const utils = preload("res://scripts/utils.gd")
+const utils = preload("utils.gd")
 
 # Constants
 
 const SIZE = Vector2(10,10)
-const MEAN = 3
-const DEVIATION = 1
+const ROOM_SIZE_MEAN = 3
+const ROOM_SIZE_DEVIATION = 1
 
 # Structs
 
@@ -42,9 +42,17 @@ func create_corridor(points):
 
 # Random creation
 
+func create_random_map():
+	var num_rooms = rand_range(2, int(((SIZE.x+SIZE.y)/2)*0.75))
+	var num_corridors = rand_range(num_rooms-1, 2*num_rooms)
+	for i in range(num_rooms):
+	    create_random_room()
+	for i in range(num_corridors):
+		create_random_corridor()
+
 func create_random_room():
-    var room_size = Vector2(utils.normal_limits(MEAN, DEVIATION, 2, SIZE.x), utils.normal_limits(MEAN, DEVIATION, 2, SIZE.y))
-    var room_pos = Vector2(rand_range(1, SIZE.x-room_size.x-1), rand_range(1, SIZE.y-room_size.y-1))
+    var room_size = Vector2(utils.normal_limits(ROOM_SIZE_MEAN, ROOM_SIZE_DEVIATION, 2, SIZE.x), utils.normal_limits(ROOM_SIZE_MEAN, ROOM_SIZE_DEVIATION, 2, SIZE.y))
+    var room_pos = Vector2(rand_range(0 , SIZE.x-room_size.x), rand_range(0, SIZE.y-room_size.y))
     create_room(room_pos, room_size)
 
 func create_random_corridor():
@@ -54,15 +62,15 @@ func create_random_corridor():
 	var point
 	for i in range(num_points):
 		if i==0 :
-			point = Vector2(int(rand_range(1, SIZE.x-1)), int(rand_range(1, SIZE.y-1)))
+			point = Vector2(int(rand_range(0, SIZE.x)), int(rand_range(0, SIZE.y)))
 			points.append(point)
 		else:
 			point = Vector2()
 			if axis==0:
 				point.x=points[len(points)-1].x
-				point.y=int(rand_range(1, SIZE.y-1))
+				point.y=int(rand_range(0, SIZE.y))
 			else:
-				point.x=int(rand_range(1, SIZE.x-1))
+				point.x=int(rand_range(0, SIZE.x))
 				point.y=points[len(points)-1].y
 			axis=int(axis+1)%2
 			points.append(point)

@@ -10,10 +10,11 @@ config_version=3
 
 [application]
 
-config/name="Evolutive Dungeon"
+config/name="Genetic Dungeon"
 run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
 
 [display]
 
-window/size/height=400
+window/size/width=1600
+window/size/height=200
