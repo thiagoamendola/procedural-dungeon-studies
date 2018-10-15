@@ -1,11 +1,15 @@
 extends Node
 
-const MapData = preload("map_data.gd")
-const MapEvaluator = preload("map_evaluator.gd")
 
 const GENERATION_SIZE = 10
+const GENERATION_SURVIVORS = 5
+const RANDOM_PER_GENERATION = 2
+
 const ROOMS_MUTATION_CHANCE = 0.5
 const CORRIDORS_MUTATION_CHANCE = 0.5
+
+const MapData = preload("map_data.gd")
+const MapEvaluator = preload("map_evaluator.gd")
 
 var generation
 var map_array
@@ -13,30 +17,33 @@ var map_array
 #onready var map_evaluator = MapEvaluator.new()
 
 
-func initiate_population(size):
+func initiate_population():
     generation = 1
-    # reinstantiate vector of maps
+    # Reinstantiate vector of maps
+    var map_data
     map_array = []
-    for i in range(size):
-        # create new random map
-        map_array[i] = create_random_map()
+    for i in range(GENERATION_SIZE):
+        # Create new random map
+        map_data = MapData.new()
+        map_data.create_random_map()
+        map_array.append(map_data)
 
 
-func update_generation(num_survivors, num_new_randoms):
+func update_generation():
     # sort maps by fitness
     map_array.sort_custom(self, "sort_maps")
     # delete worst maps
-    for i in range(GENERATION_SIZE-num_survivors):
+    for i in range(GENERATION_SIZE-GENERATION_SURVIVORS):
         map_array.pop_back()
     # recreate destroyed maps based on survivors
     var parent = 0
     var map_data
-    for i in range(num_survivors-num_new_randoms):
+    for i in range(GENERATION_SURVIVORS-RANDOM_PER_GENERATION):
         # create crossover child
         map_data = maps_crossover(map_array[parent], map_array[parent+1])
         map_array.append(map_data)
         parent+=2
-    for i in range(num_new_randoms):
+    for i in range(RANDOM_PER_GENERATION):
         # create random child
         map_data = MapData.new()
         map_data.create_random_map()
@@ -111,7 +118,7 @@ func mutate_corridors(map):
 
 static func sort_maps(a, b):
     var map_evaluator = MapEvaluator.new()
-    if map_evaluator.get_fitness(a) < map_evaluator.get_fitness(b):
+    if map_evaluator.get_fitness(a) > map_evaluator.get_fitness(b):
         return true
     return false
     
