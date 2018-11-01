@@ -41,11 +41,3 @@ static func create_empty_matrix(map):
             matrix[x].append([])
             matrix[x][y]=0
     return matrix
-
-#
-
-    # for x in range(map.SIZE.x):
-    #    var text = ""
-    #    for y in range(map.SIZE.y):
-    #        text += ", "+str(matrix[x][y])
-    #    print(text)

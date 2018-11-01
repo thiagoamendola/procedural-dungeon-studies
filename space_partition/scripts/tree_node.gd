@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 # Imports
 
@@ -18,5 +18,9 @@ func init_root(map):
     ending = Vector2(map.SIZE.x, map.SIZE.y)
     childs = []
 
-func get_dim():
+func get_size():
     return Vector2(ending.x-origin.x, ending.y-origin.y)
+
+func print():
+    var cur_size = get_size()
+    print("SIZE:("+str(cur_size.x)+","+str(cur_size.y)+") ; origin:("+str(origin.x)+","+str(origin.y)+") ; ending("+str(ending.x)+","+str(ending.y)+")")
