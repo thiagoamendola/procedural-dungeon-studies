@@ -19,14 +19,16 @@ func generate_map(map):
     tree_node.init_root(map)
     # Partitionate the area
     partitionate_map(map, tree_node)
+    #see_partitions(map,tree_node,0)
     # Create rooms
+    create_rooms(map,tree_node)
     # Connect rooms
     pass
 
 func partitionate_map(map, node):
-    var cur_size = node.get_dim()
-    print("SIZE:("+str(cur_size.x)+","+str(cur_size.y)+") ; origin:("+str(node.origin.x)+","+str(node.origin.y)+") ; ending("+str(node.ending.x)+","+str(node.ending.y)+")")
+    var cur_size = node.get_size()
     if cur_size.x < map.MIN_SIZE.x or cur_size.y < map.MIN_SIZE.y:
+        #node.print()
         return
     # partitionate and recurse
     if rand_range(0.0, 1.0) > 0.5:
@@ -61,4 +63,27 @@ func partitionate_map(map, node):
         node.childs.append(child1)
     partitionate_map(map,node.childs[0])
     partitionate_map(map,node.childs[1])
-    
+
+func see_partitions(map,node,k):
+    if node.childs == null or len(node.childs) < 2:
+        for i in range(node.origin.x,node.ending.x):
+            for j in range(node.origin.y,node.ending.y):
+                map.matrix[i][j]=k
+        return
+    see_partitions(map,node.childs[0],0)
+    see_partitions(map,node.childs[1],1)
+
+func create_rooms(map,node):
+    if node.childs == null or len(node.childs) < 2:
+        var partition_size = node.get_size()
+        var true_min_size = Vector2(min(MIN_ROOM.x,partition_size.x),min(MIN_ROOM.y,partition_size.y))
+        var room_size = Vector2(int(rand_range(true_min_size.x,partition_size.x)),int(rand_range(true_min_size.y,partition_size.y)))
+        var room_pos = Vector2(int(rand_range(node.origin.x,node.ending.x-room_size.x)),int(rand_range(node.origin.y,node.ending.y-room_size.y)))
+        for i in range(room_pos.x,room_pos.x+room_size.x):
+            for j in range(room_pos.y,room_pos.y+room_size.y):
+                map.matrix[i][j]=1
+        node.print()
+        print("Room-> origin("+str(room_pos.x)+","+str(room_pos.y)+") ; size("+str(room_size.x)+","+str(room_size.y)+")")
+        return
+    create_rooms(map,node.childs[0])
+    create_rooms(map,node.childs[1])

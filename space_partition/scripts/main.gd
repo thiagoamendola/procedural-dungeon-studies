@@ -15,3 +15,20 @@ func _ready():
 	var map_data = MapData.new()
 	space_partition.generate_map(map_data)
 	map_viewer.render_map(map_data)
+	#map_viewer.render_partition_limits()
+	update()
+
+func _draw():
+	if map_viewer!=null:
+		map_viewer.render_partition_limits(space_partition.tree_node)
+	
+
+func _on_ResetBtn_pressed():
+	var map_data = MapData.new()
+	space_partition.generate_map(map_data)
+	map_viewer.render_map(map_data)
+
+
+func _on_PartitionsBtn_pressed():
+	map_viewer.partitions_visible = !map_viewer.partitions_visible
+	update()
