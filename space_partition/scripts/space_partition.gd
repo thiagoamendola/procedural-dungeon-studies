@@ -19,7 +19,6 @@ func generate_map(map):
     tree_node.init_root(map)
     # Partitionate the area
     partitionate_map(map, tree_node)
-    #see_partitions(map,tree_node,0)
     # Create rooms
     create_rooms(map,tree_node)
     # Connect rooms
@@ -64,15 +63,6 @@ func partitionate_map(map, node):
     partitionate_map(map,node.childs[0])
     partitionate_map(map,node.childs[1])
 
-func see_partitions(map,node,k):
-    if node.childs == null or len(node.childs) < 2:
-        for i in range(node.origin.x,node.ending.x):
-            for j in range(node.origin.y,node.ending.y):
-                map.matrix[i][j]=k
-        return
-    see_partitions(map,node.childs[0],0)
-    see_partitions(map,node.childs[1],1)
-
 func create_rooms(map,node):
     if node.childs == null or len(node.childs) < 2:
         var partition_size = node.get_size()
@@ -82,8 +72,8 @@ func create_rooms(map,node):
         for i in range(room_pos.x,room_pos.x+room_size.x):
             for j in range(room_pos.y,room_pos.y+room_size.y):
                 map.matrix[i][j]=1
-        node.print()
-        print("Room-> origin("+str(room_pos.x)+","+str(room_pos.y)+") ; size("+str(room_size.x)+","+str(room_size.y)+")")
+        #node.print()
+        #print("Room-> origin("+str(room_pos.x)+","+str(room_pos.y)+") ; size("+str(room_size.x)+","+str(room_size.y)+")")
         return
     create_rooms(map,node.childs[0])
     create_rooms(map,node.childs[1])
