@@ -23,10 +23,10 @@ func render_map(map):
     # Assign matrix to map view
     for i in range(map.SIZE.x+2):
         for j in range(map.SIZE.y+2):
-            tile_map_list[view_index].set_cellv(Vector2(i,j), 0)
+            map_view.set_cellv(Vector2(i,j), 0)
     # Fill empty spaces
     for i in range(map.SIZE.x):
         for j in range(map.SIZE.y):
-            tile_map_list[view_index].set_cellv(Vector2(i+1,j+1), matrix[i][j])
+            map_view.set_cellv(Vector2(i+1,j+1), matrix[i][j])
     pass
 

@@ -1,4 +1,11 @@
 
+# Enums
+
+enum Orientation{
+    VERTICAL,
+    HORIZONTAL
+}
+
 # Normal distribution implementation through Box-Muller polar transform.
 static func normal(mean, deviation):
     var x1 = null

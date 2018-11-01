@@ -11,10 +11,7 @@ func _ready():
 	randomize()
 	map_viewer.create_map_view()
 	# Create population and render
-	space_partition = EvolutionManager.new()
-	var map_data = space_partition.generate_map()
+	space_partition = SpacePartition.new()
+	var map_data = MapData.new()
+	space_partition.generate_map(map_data)
 	map_viewer.render_map(map_data)
-
-func render_population():
-	for i in range(EvolutionManager.GENERATION_SIZE):
-		map_viewer.build_map(evolution_manager.map_array[i], i)

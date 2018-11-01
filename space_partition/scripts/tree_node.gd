@@ -1,11 +1,8 @@
 extends Node
 
-# Enums
+# Imports
 
-enum Orientation{
-    VERTICAL,
-    HORIZONTAL
-}
+const utils = preload("utils.gd")
 
 # Parameters
 
@@ -20,3 +17,6 @@ func init_root(map):
     origin = Vector2(0,0)
     ending = Vector2(map.SIZE.x, map.SIZE.y)
     childs = []
+
+func get_dim():
+    return Vector2(ending.x-origin.x, ending.y-origin.y)
