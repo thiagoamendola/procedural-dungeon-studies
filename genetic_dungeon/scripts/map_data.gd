@@ -22,6 +22,8 @@ class Corridor:
 
 var room_list
 var corridor_list
+var entrance
+var exit
 
 func _init():
 	room_list = []
@@ -49,10 +51,11 @@ func create_random_map():
 	    create_random_room()
 	for i in range(num_corridors):
 		create_random_corridor()
+	create_random_entrance_exit()
 
 func create_random_room():
     var room_size = Vector2(utils.normal_limits(ROOM_SIZE_MEAN, ROOM_SIZE_DEVIATION, 2, SIZE.x), utils.normal_limits(ROOM_SIZE_MEAN, ROOM_SIZE_DEVIATION, 2, SIZE.y))
-    var room_pos = Vector2(rand_range(0 , SIZE.x-room_size.x), rand_range(0, SIZE.y-room_size.y))
+    var room_pos = Vector2(rand_range(0, SIZE.x-room_size.x), rand_range(0, SIZE.y-room_size.y))
     create_room(room_pos, room_size)
 
 func create_random_corridor():
@@ -61,20 +64,30 @@ func create_random_corridor():
 	var axis = int(rand_range(0,2))
 	var point
 	for i in range(num_points):
-		if i==0 :
+		if i == 0 :
 			point = Vector2(int(rand_range(0, SIZE.x)), int(rand_range(0, SIZE.y)))
 			points.append(point)
 		else:
 			point = Vector2()
-			if axis==0:
-				point.x=points[len(points)-1].x
-				point.y=int(rand_range(0, SIZE.y))
+			if axis == 0:
+				point.x = points[len(points)-1].x
+				point.y = int(rand_range(0, SIZE.y))
 			else:
-				point.x=int(rand_range(0, SIZE.x))
-				point.y=points[len(points)-1].y
-			axis=int(axis+1)%2
+				point.x = int(rand_range(0, SIZE.x))
+				point.y = points[len(points)-1].y
+			axis = int(axis+1)%2
 			points.append(point)
 	create_corridor(points)
+
+func create_random_entrance_exit():
+	entrance = create_random_position()
+	exit = create_random_position()
+
+func create_random_position():
+	var room = room_list[rand_range(0, len(room_list))]
+	var random_pos = Vector2(int(rand_range(room.init_pos.x, room.init_pos.x + room.size.x)), int(rand_range(room.init_pos.y, room.init_pos.y + room.size.y)))
+	return random_pos
+
 
 # Others
 

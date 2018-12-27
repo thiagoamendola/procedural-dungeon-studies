@@ -54,6 +54,7 @@ func maps_crossover(map1, map2):
     var map_child = MapData.new()
     crossover_rooms(map_child, map1, map2)
     crossover_corridors(map_child, map1, map2)
+    map_child.create_random_entrance_exit()
     #mutate_map(map_child, map1, map2)
     return map_child
 
@@ -76,8 +77,7 @@ func crossover_rooms(map_child, map1, map2):
 
 func crossover_corridors(map_child, map1, map2):
     # Get random number between both map sizes.
-    var num_corridors = rand_range(min(map1.corridor_list.size(),map2.corridor_list.size()),
-                                   max(map1.corridor_list.size(),map2.corridor_list.size())+1)
+    var num_corridors = rand_range(min(map1.corridor_list.size(),map2.corridor_list.size()), max(map1.corridor_list.size(),map2.corridor_list.size())+1)
     # Create set with all corridors.
     var maps_corridors = []
     for corridor in map1.corridor_list:
@@ -96,6 +96,8 @@ func crossover_corridors(map_child, map1, map2):
 func mutate_map(map):
     mutate_rooms(map)
     mutate_corridors(map)
+    map.create_random_entrance_exit()
+
 
 func mutate_rooms(map):
     if rand_range(0.0, 1.0) >= ROOMS_MUTATION_CHANCE:

@@ -8,9 +8,12 @@ var ROOM_OVERLAP_PENALTY = -2
 var CORRIDOR_OVERLAP_PENALTY = -1
 var CORRIDOR_END_PENALTY = -10
 var UNREACHABLE_CELL_PENALTY = -1
+var DISTANCE_MULTIPLIER = 3
+var UNREACHABLE_PATH_PENALTY = 150
 
 # Imports
 const utils = preload("utils.gd")
+const map_spawner = preload("map_spawner.gd")
 
 # Returns the fitness for a given map.
 func get_fitness(map):
@@ -21,6 +24,7 @@ func get_fitness(map):
     fitness += overlapping_corridors(map)
     fitness += corridor_endings(map)
     fitness += map_reachability(map)
+    fitness += entrance_exit_distance(map)
     return fitness
 
 # Evaluation steps.
@@ -36,9 +40,9 @@ func elements_sum(map):
 
 func room_overlap(map):
     # Create int map.
-    var matrix = utils.create_empty_matrix(map)
+    var matrix = map_spawner.create_empty_matrix(map.SIZE)
     # Add cell for each room ocurrence.
-    matrix = utils.create_rooms_matrix(map, matrix, true)
+    matrix = map_spawner.create_rooms_matrix(map, matrix, true)
     # Remove none and single ocurrences.
     for x in range(map.SIZE.x):
         for y in range(map.SIZE.y):
@@ -58,9 +62,9 @@ func adjacent_rooms(map):
 
 func overlapping_corridors(map):
     # Create int map.
-    var matrix = utils.create_empty_matrix(map)
+    var matrix = map_spawner.create_empty_matrix(map.SIZE)
     # Add cell for each corridor ocurrence.
-    matrix = utils.create_corridors_matrix(map, matrix, true)
+    matrix = map_spawner.create_corridors_matrix(map, matrix, true)
     # Remove none and single ocurrences.
     for x in range(map.SIZE.x):
         for y in range(map.SIZE.y):
@@ -77,9 +81,9 @@ func overlapping_corridors(map):
 
 func corridor_endings(map):
     # Create int map.
-    var matrix = utils.create_empty_matrix(map)
+    var matrix = map_spawner.create_empty_matrix(map.SIZE)
     # Create map of rooms.
-    matrix = utils.create_rooms_matrix(map, matrix, false)
+    matrix = map_spawner.create_rooms_matrix(map, matrix, false)
     # foreach corridor, get both ends and check if it and its adjacencies are inside a room.
     var penalty = 0
     for corridor in map.corridor_list:
@@ -90,10 +94,10 @@ func corridor_endings(map):
 
 func map_reachability(map):
     # Create int map.
-    var matrix = utils.create_empty_matrix(map)
+    var matrix = map_spawner.create_empty_matrix(map.SIZE)
     # Create map of rooms and corridors.
-    matrix = utils.create_rooms_matrix(map, matrix, false)
-    matrix = utils.create_corridors_matrix(map, matrix, false)
+    matrix = map_spawner.create_rooms_matrix(map, matrix, false)
+    matrix = map_spawner.create_corridors_matrix(map, matrix, false)
     # Get number of spaces and detect first empty space and add to queue. 
     var num_spaces = 0
     var first_space = Vector2(-1,0)
@@ -122,7 +126,43 @@ func map_reachability(map):
         penalty = map.SIZE.x*map.SIZE.y*UNREACHABLE_CELL_PENALTY
     #print("map_reachability: "+str(penalty))
     return penalty
+
     
+func entrance_exit_distance(map):
+    # Create int map.
+    var matrix = map_spawner.create_empty_matrix(map.SIZE)
+    # Create map of rooms and corridors.
+    matrix = map_spawner.create_rooms_matrix(map, matrix, false)
+    matrix = map_spawner.create_corridors_matrix(map, matrix, false)
+    matrix = map_spawner.create_entrance_exit_matrix(map, matrix)
+    # Start recursion in start
+    var current_level = []
+    var next_level = []
+    var level = 0
+    var found = false
+    current_level.append(map.entrance)
+    while not current_level.empty():
+        var cell = current_level.pop_front()
+        if matrix[cell.x][cell.y] == 3:
+            found = true
+            break
+        if cell.x-1>=0 and matrix[cell.x-1][cell.y] >= 1:
+            next_level.append(Vector2(cell.x-1,cell.y))
+        if cell.x+1<map.SIZE.x and matrix[cell.x+1][cell.y] >= 1:
+            next_level.append(Vector2(cell.x+1,cell.y))
+        if cell.y-1>=0 and matrix[cell.x][cell.y-1] >= 1:
+            next_level.append(Vector2(cell.x, cell.y-1))
+        if cell.y+1<map.SIZE.y and matrix[cell.x][cell.y+1] >= 1:
+            next_level.append(Vector2(cell.x, cell.y+1))
+        matrix[cell.x][cell.y] = 0
+        if current_level.empty():
+            current_level = next_level
+            next_level = []
+            level+=1
+    if not found:
+        level -= UNREACHABLE_PATH_PENALTY
+    return level * DISTANCE_MULTIPLIER;
+
 # Assisting methods
 
 func check_adj_reachable(matrix, bounds, queue, cell):
@@ -146,8 +186,9 @@ func check_adj_corridor(matrix, bounds, cell):
         return true
     return false
 
-#    for x in range(map.SIZE.x):
-#        var text = ""
-#        for y in range(map.SIZE.y):
-#            text += ", "+str(matrix[x][y])
-#        print(text)
+func print_map(matrix, size):
+    for y in range(size.y):
+        var text = ""
+        for x in range(size.x):
+            text += ", "+str(matrix[x][y])
+        print(text)
