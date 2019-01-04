@@ -32,17 +32,13 @@ func create_map_view(num_map):
         map_pos.x += (TILE_SIZE.x * (map_size.x+2)/2) + MAP_OFFSET
 
 func build_map(map, view_index):
-    # Get a matrix representation of the map (I think I already have one)
-    var matrix = MapSpawner.get_map_matrix(map)
-    # Assign matrix to map view
+    # Get a matrix representation of the map.
+    var matrix = MapSpawner.get_map_matrix_border(map)
+    # Assign matrix to map view.
     for i in range(map.SIZE.x+2):
         for j in range(map.SIZE.y+2):
-            tile_map_list[view_index].set_cellv(Vector2(i,j), 0)
-    # Fill empty spaces
-    for i in range(map.SIZE.x):
-        for j in range(map.SIZE.y):
-            tile_map_list[view_index].set_cellv(Vector2(i+1,j+1), matrix[i][j])
-    # Show fitness
+            tile_map_list[view_index].set_cellv(Vector2(i,j), matrix[i][j])
+    # Show fitness.
     var fitness_label = tile_map_list[view_index].get_node("Fitness")
     fitness_label.text = str(map_evaluator.get_fitness(map))
     pass

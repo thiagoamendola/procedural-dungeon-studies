@@ -13,6 +13,20 @@ static func get_map_matrix(map):
     matrix = create_entrance_exit_matrix(map, matrix)
     return matrix
 
+# Returns a full matrix map.
+static func get_map_matrix_border(map):
+    var matrix = create_empty_matrix(Vector2(map.SIZE.x+2, map.SIZE.y+2))
+    # Get a matrix representation of the map (I think I already have one)
+    var raw_matrix = get_map_matrix(map)
+    # Assign matrix to map view
+    for i in range(map.SIZE.x+2):
+        for j in range(map.SIZE.y+2):
+            matrix[i][j] = 0
+    # Fill empty spaces
+    for i in range(map.SIZE.x):
+        for j in range(map.SIZE.y):
+            matrix[i+1][j+1] = raw_matrix[i][j]
+    return matrix
 
 # Creates an empty matrix given its proportions.
 static func create_empty_matrix(size):

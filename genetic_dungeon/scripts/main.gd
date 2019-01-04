@@ -4,6 +4,8 @@ const MapData = preload("map_data.gd")
 const MapEvaluator = preload("map_evaluator.gd")
 const EvolutionManager = preload("evolution_manager.gd")
 
+const MapSpawner = preload("map_spawner.gd")
+
 onready var map_viewer = get_node("MapViewer")
 var evolution_manager
 
@@ -37,6 +39,10 @@ func _on_NextGenBtn_pressed():
 func _on_ResetBtn_pressed():
 	reset_population()
 
+func _on_TESTTESTBtn_pressed():
+	var matrix = MapSpawner.get_map_matrix_border(evolution_manager.map_array[0])
+	map_tester.test_map(matrix)
+
 # Legacy
 	
 func test2():
@@ -65,7 +71,6 @@ func test1():
 	# print("Score: "+str(score))
 	pass
 	
-	
 func new_map():
 	var map_data = MapData.new()
 	var rooms = rand_range(2,5)
@@ -79,3 +84,5 @@ func create_defined_map():
 	map_data.create_room(Vector2(1,1), Vector2(3,4))
 	map_data.create_room(Vector2(5,5), Vector2(4,2))
 	map_data.create_corridor([Vector2(4,2),Vector2(7,2),Vector2(7,4)])
+
+

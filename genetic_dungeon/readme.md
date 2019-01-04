@@ -15,4 +15,6 @@ Create a genetic algorithm system capable of mutating and breeding procedurally 
 - [x] Create map mutation method
 - [x] Implement multiple maps (and their fitness) visualization
 - [x] Create start and exit points
-- [ ] Play a selected map with a previously prepared gameplay engine (2d or topdown)
+- [ ] Play a selected map with a previously prepared gameplay engine
+  - [x] 2D Platform Engine
+  - [ ] Top-down Engine
