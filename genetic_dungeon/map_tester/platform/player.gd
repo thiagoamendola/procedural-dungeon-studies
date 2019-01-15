@@ -46,10 +46,10 @@ var shoot_time = 1e20
 
 var MAX_SHOOT_POSE_TIME = 0.3
 
-var bullet = preload("bullet.tscn")
+var bullet
 
 var floor_h_velocity = 0.0
-onready var enemy = load("enemy.tscn")
+var enemy
 
 
 func _integrate_forces(s):
