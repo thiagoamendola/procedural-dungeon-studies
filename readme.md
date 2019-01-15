@@ -4,6 +4,9 @@
 
 - Genetic Dungeons
 - Space Partitioning Dungeons
-- Cellular Automata Dungeons
 
 ## Next Studies
+
+- Interpolated Terrains
+- Diamon Square Terrains
+- Cellular Automata Dungeons
