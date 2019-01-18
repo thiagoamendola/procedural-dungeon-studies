@@ -1,8 +1,8 @@
-# Genetic Dungeon
+# Space Partitioned Dungeon
 
 ## Objective
 
-Create a genetic algorithm system capable of mutating and breeding procedurally generated bidimensional dungeons.
+Create a dungeon using a space partition method.
 
 ## To Do List
 
@@ -14,7 +14,8 @@ Create a genetic algorithm system capable of mutating and breeding procedurally 
 - [x] Create map breeding method
 - [x] Create map mutation method
 - [x] Implement multiple maps (and their fitness) visualization
-- [ ] Implement corridor link between adjacent rooms
+- [x] Implement corridor link between adjacent rooms
+    - [ ] Fix some rooms still not being connected
 - [ ] Create start and exit points
 - [ ] Play a selected map with a previously prepared gameplay engine (2d or topdown)
 

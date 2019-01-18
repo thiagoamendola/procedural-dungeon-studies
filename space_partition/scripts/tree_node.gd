@@ -12,6 +12,9 @@ var ending
 var childs
 var orientation
 
+var room_pos
+var room_size
+
 func init_root(map):
     map_data = map
     origin = Vector2(0,0)

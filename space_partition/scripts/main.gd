@@ -27,7 +27,7 @@ func _on_ResetBtn_pressed():
 	var map_data = MapData.new()
 	space_partition.generate_map(map_data)
 	map_viewer.render_map(map_data)
-
+	update()
 
 func _on_PartitionsBtn_pressed():
 	map_viewer.partitions_visible = !map_viewer.partitions_visible

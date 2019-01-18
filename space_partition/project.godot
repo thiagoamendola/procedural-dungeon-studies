@@ -14,6 +14,10 @@ config/name="Space Partition Dungeon"
 run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+map_tester="*res://map_tester/map_tester.gd"
+
 [display]
 
 window/size/width=800

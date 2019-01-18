@@ -7,7 +7,7 @@ const utils = preload("utils.gd")
 # Constants
 
 const SIZE = Vector2(20,20)
-const MIN_SIZE = Vector2(3,3)
+const MIN_SIZE = Vector2(10,10)
 
 # Structs
 
