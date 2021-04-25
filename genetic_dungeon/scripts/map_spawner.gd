@@ -21,7 +21,7 @@ static func get_map_matrix_border(map):
 	# Assign matrix to map view
 	for i in range(map.SIZE.x+2):
 		for j in range(map.SIZE.y+2):
-			matrix[i][j] = 0
+			matrix[i][j] = utils.WALL_CELL
 	# Fill empty spaces
 	for i in range(map.SIZE.x):
 		for j in range(map.SIZE.y):
@@ -37,7 +37,7 @@ static func create_empty_matrix(size):
 		matrix[x]=[]
 		for y in range(size.y):
 			matrix[x].append([])
-			matrix[x][y]=0
+			matrix[x][y] = utils.WALL_CELL
 	return matrix
 
 #
@@ -50,7 +50,7 @@ static func create_rooms_matrix(map, matrix, additive=false):
 				if additive:
 					matrix[x][y] += 1
 				else:
-					matrix[x][y] = 1
+					matrix[x][y] = utils.EMPTY_CELL
 	return matrix
 
 static func create_corridors_matrix(map, matrix, additive=false):
@@ -71,7 +71,7 @@ static func create_corridors_matrix(map, matrix, additive=false):
 					if additive:
 						matrix[x_pos][y_pos] += 1
 					else:
-						matrix[x_pos][y_pos] = 1
+						matrix[x_pos][y_pos] = utils.EMPTY_CELL
 			elif cur_point.y == next_point.y:
 				y_pos = cur_point.y
 				mi = min(cur_point.x, next_point.x)
@@ -81,11 +81,11 @@ static func create_corridors_matrix(map, matrix, additive=false):
 					if additive:
 						matrix[x_pos][y_pos] += 1
 					else:
-						matrix[x_pos][y_pos] = 1
+						matrix[x_pos][y_pos] = utils.EMPTY_CELL
 	return matrix
 
 #
 static func create_entrance_exit_matrix(map, matrix):
-	matrix[map.entrance.x][map.entrance.y] = 2
-	matrix[map.exit.x][map.exit.y] = 3
+	matrix[map.entrance.x][map.entrance.y] = utils.START_CELL
+	matrix[map.exit.x][map.exit.y] = utils.END_CELL
 	return matrix
